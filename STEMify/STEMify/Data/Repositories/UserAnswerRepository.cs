@@ -16,11 +16,11 @@ namespace STEMify.Data.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<UserAnswer>> GetAnswersByUserAndQuizAsync(int userId, int quizId)
-        {
-            return await _context.Set<UserAnswer>() // Use DbContext.Set<TEntity>() to access the DbSet
-                .Where(a => a.UserId == userId && a.QuizId == quizId)
-                .ToListAsync();
-        }
+        //public async Task<IEnumerable<UserAnswer>> GetAnswersByUserAndQuizAsync(int userId, int quizId)
+        //{
+        //    return await _context.Set<UserAnswer>() // Use DbContext.Set<TEntity>() to access the DbSet
+        //        .Where(a => a.UserId == userId && a.QuizId == quizId)
+        //        .ToListAsync();
+        //}
     }
 }

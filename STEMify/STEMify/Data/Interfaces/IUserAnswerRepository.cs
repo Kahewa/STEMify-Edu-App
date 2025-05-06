@@ -6,6 +6,6 @@ namespace STEMify.Data.Interfaces
     {
         // Add methods specific to UserAnswer repository
         Task AddAnswerAsync(UserAnswer answer);
-        Task<IEnumerable<UserAnswer>> GetAnswersByUserAndQuizAsync(int userId, int quizId);
+        //Task<IEnumerable<UserAnswer>> GetAnswersByUserAndQuizAsync(int userId, int quizId);
     }
 }
