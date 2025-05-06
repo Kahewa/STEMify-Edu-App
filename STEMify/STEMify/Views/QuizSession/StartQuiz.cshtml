@@ -1,0 +1,38 @@
+﻿@model STEMify.Models.Quizzes.QuizSubmissionViewModel
+
+<h2>Quiz</h2>
+
+<form asp-action="SubmitAnswer" method="post">
+    @for(int i = 0; i < Model.Answers.Count; i++)
+    {
+        <div>
+            <p>@Model.Answers[i].QuestionText</p>
+            <input type="hidden" asp-for="Answers[@i].QuestionId" />
+            <input type="hidden" asp-for="Answers[@i].QuestionType" />
+
+            @if(Model.Answers[i].QuestionType == 1) // Multiple Choice
+            {
+                <div>
+                    <input type="radio" asp-for="Answers[@i].SelectedAnswer" value="A" /> Option A<br />
+                    <input type="radio" asp-for="Answers[@i].SelectedAnswer" value="B" /> Option B<br />
+                    <input type="radio" asp-for="Answers[@i].SelectedAnswer" value="C" /> Option C<br />
+                    <input type="radio" asp-for="Answers[@i].SelectedAnswer" value="D" /> Option D<br />
+                </div>
+            }
+            else if(Model.Answers[i].QuestionType == 2) // Fill in the Blank
+            {
+                <input type="text" asp-for="Answers[@i].SelectedAnswer" placeholder="Your Answer" />
+            }
+            else if(Model.Answers[i].QuestionType == 3) // True/False
+            {
+                <div>
+                    <input type="radio" asp-for="Answers[@i].SelectedAnswer" value="True" /> True<br />
+                    <input type="radio" asp-for="Answers[@i].SelectedAnswer" value="False" /> False<br />
+                </div>
+            }
+        </div>
+        <hr />
+    }
+
+    <button type="submit">Submit</button>
+</form>
