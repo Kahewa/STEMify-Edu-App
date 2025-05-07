@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using STEMify.Models;
 using STEMify.Data.Interfaces;
 using STEMify.Models.User;
+using Microsoft.EntityFrameworkCore;
 
 namespace STEMify.Controllers
 {
@@ -136,6 +137,18 @@ namespace STEMify.Controllers
         public IActionResult Error()
         {
             return View();
+        }
+        [HttpGet]
+        public IActionResult Search(string term)
+        {
+            var results = UnitOfWork.Courses.GetAll()
+                .Where(c => c.CourseName.Contains(term) || c.Description.Contains(term))
+                .Select(c => new {
+                    Label = c.CourseName,
+                    Url = Url.Action("Details", "Courses", new { id = c.CourseID })
+                }).ToList();
+
+            return Json(results);
         }
 
     }

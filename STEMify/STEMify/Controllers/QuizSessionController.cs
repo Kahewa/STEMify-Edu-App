@@ -35,6 +35,27 @@ namespace STEMify.Controllers
             {
                 return NotFound("No questions found for this quiz.");
             }
+            // 🔁 Step 1: Check if an existing attempt exists for this user and quiz
+            var existingAttempt = UnitOfWork.QuizAttempts
+                .Find(a => a.QuizId == quizId && a.UserId == User.Identity.Name)
+                .FirstOrDefault();
+
+            if(existingAttempt != null)
+            {
+                // Optional: delete related quiz answers if you store them separately
+                var relatedAnswers = UnitOfWork.QuizAnswers
+                    .Find(a => a.Id == existingAttempt.Id)
+                    .ToList();
+
+                foreach(var answer in relatedAnswers)
+                {
+                    UnitOfWork.QuizAnswers.Remove(answer);
+                }
+
+                // 🗑️ Step 2: Delete the old attempt
+                UnitOfWork.QuizAttempts.Remove(existingAttempt);
+                UnitOfWork.Complete();
+            }
 
             var quizAttempt = new QuizAttempt
             {
@@ -58,22 +79,35 @@ namespace STEMify.Controllers
         }
 
         [HttpPost]
-        public IActionResult SubmitAnswers(QuizSubmissionViewModel submission)
+        public async Task<IActionResult> SubmitAnswers(QuizSubmissionViewModel submission)
         {
-            
-            var quizAttemptId = submission.AttemptId; // ✅ Correct
-            var quizAttempt = UnitOfWork.QuizAttempts.Get(quizAttemptId);
+            var quizAttempt = await UnitOfWork.QuizAttempts.GetAsync(submission.AttemptId);
             if(quizAttempt == null)
-            {
                 return NotFound("Quiz attempt not found.");
+
+            // 🔁 Step 1: Delete old answers before starting the loop
+            var existingAnswers = UnitOfWork.UserAnswers
+                .GetAll()
+                .Where(a => a.UserId == User.Identity.Name && a.QuizId == submission.QuizId)
+                .ToList();
+
+            if(existingAnswers.Any())
+            {
+                foreach(var answer in existingAnswers)
+                {
+                    UnitOfWork.UserAnswers.Remove(answer);
+                }
+                await UnitOfWork.CompleteAsync(); // 💾 Commit deletion before adding new ones
             }
+
+            int COUNT = 0;
 
             foreach(var answer in submission.Answers)
             {
-                var question = UnitOfWork.QuizQuestions.Get(answer.QuestionId);
+                var question = await UnitOfWork.QuizQuestions.GetAsync(answer.QuestionId);
                 if(question == null) continue;
 
-                var isCorrect = ValidateAnswer(question, answer.SelectedAnswer);
+                var isCorrect = await ValidateAnswerAsync(question, answer.SelectedAnswer);
 
                 var userAnswer = new UserAnswer
                 {
@@ -85,17 +119,39 @@ namespace STEMify.Controllers
                 };
 
                 UnitOfWork.UserAnswers.Add(userAnswer);
+                COUNT++;
             }
 
-            quizAttempt.Score = UnitOfWork.UserAnswers
-                                         .Find(u => u.QuizId == submission.QuizId && u.UserId == User.Identity.Name)
-                                         .Count(u => u.IsCorrect);
+            // ✅ Save all new answers at once
+            await UnitOfWork.CompleteAsync();
 
+            var correctCount = (await UnitOfWork.UserAnswers
+                .FindAsync(u => u.QuizId == submission.QuizId && u.UserId == User.Identity.Name))
+                .Count(u => u.IsCorrect);
+
+            quizAttempt.Score = correctCount;
             quizAttempt.EndTime = DateTime.UtcNow;
-            UnitOfWork.Complete();
 
-            return RedirectToAction("Summary", new { quizAttemptId = quizAttemptId });
+            var questions = await UnitOfWork.QuizQuestions
+                .FindAsync(q => q.QuizId == submission.QuizId);
+
+            await UnitOfWork.CompleteAsync();
+
+            var userAnswers = await UnitOfWork.UserAnswers
+                .FindAsync(u => u.QuizId == submission.QuizId && u.UserId == User.Identity.Name);
+
+            var viewModel = new QuizSummaryViewModel
+            {
+                QuizAttempt = quizAttempt,
+                Questions = questions,
+                UserAnswers = userAnswers,
+                TotalAnswersSubmitted = COUNT
+            };
+
+            return View("Summary", viewModel);
         }
+
+
 
         public IActionResult Summary(int quizAttemptId)
         {
@@ -104,7 +160,6 @@ namespace STEMify.Controllers
             {
                 return NotFound("Quiz attempt not found.");
             }
-
             var userAnswers = UnitOfWork.UserAnswers
                 .Find(a => a.QuizId == quizAttempt.QuizId && a.UserId == quizAttempt.UserId)
                 .ToList();
@@ -168,28 +223,39 @@ namespace STEMify.Controllers
             return null;
         }
 
-        private bool ValidateAnswer(QuizQuestion question, string selectedAnswer)
+        /// <summary>
+        ///  How the answer is validated depends on the question type.
+        /// </summary>
+        private async Task<bool> ValidateAnswerAsync(QuizQuestion question, string selectedAnswer)
         {
             if(string.IsNullOrEmpty(selectedAnswer))
                 return false;
 
-            return question.QuestionType switch
+            switch(question.QuestionType)
             {
-                2 => UnitOfWork.MultipleChoiceQuestions
-                                 .Find(m => m.QuizQuestionId == question.Id)
-                                 .FirstOrDefault()?.CorrectAnswer.Equals(selectedAnswer, StringComparison.OrdinalIgnoreCase) ?? false,
+                case 2: // Multiple Choice
+                    var mc = await UnitOfWork.MultipleChoiceQuestions
+                                .FindAsync(m => m.QuizQuestionId == question.Id);
+                    return mc.FirstOrDefault()?.CorrectAnswer
+                               .Equals(selectedAnswer, StringComparison.OrdinalIgnoreCase) ?? false;
 
-                3 => UnitOfWork.FillInTheBlankQuestions
-                                 .Find(f => f.QuizQuestionId == question.Id)
-                                 .FirstOrDefault()?.CorrectAnswer.Equals(selectedAnswer, StringComparison.OrdinalIgnoreCase) ?? false,
+                case 3: // Fill in the Blank
+                    var fib = await UnitOfWork.FillInTheBlankQuestions
+                                .FindAsync(f => f.QuizQuestionId == question.Id);
+                    return fib.FirstOrDefault()?.CorrectAnswer
+                               .Equals(selectedAnswer, StringComparison.OrdinalIgnoreCase) ?? false;
 
-                4 => UnitOfWork.TrueFalseQuestions
-                                 .Find(t => t.QuizQuestionId == question.Id)
-                                 .FirstOrDefault()?.Answer.ToString().Equals(selectedAnswer, StringComparison.OrdinalIgnoreCase) ?? false,
+                case 4: // True/False
+                    var tf = await UnitOfWork.TrueFalseQuestions
+                                .FindAsync(t => t.QuizQuestionId == question.Id);
+                    return tf.FirstOrDefault()?.Answer.ToString()
+                               .Equals(selectedAnswer, StringComparison.OrdinalIgnoreCase) ?? false;
 
-                _ => false
-            };
+                default:
+                    return false;
+            }
         }
+
 
         public IActionResult RenderPartial(string viewName, string model)
         {

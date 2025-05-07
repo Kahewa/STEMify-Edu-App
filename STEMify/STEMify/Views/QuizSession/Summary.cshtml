@@ -1,11 +1,12 @@
 ﻿@model STEMify.Models.Quizzes.QuizSummaryViewModel
 
+
 <h1>Quiz Summary</h1>
 
 <div class="card my-4">
     <div class="card-body">
         <h5 class="card-title">Quiz: @Model.QuizAttempt.QuizId</h5>
-        <p class="card-text">Score: @Model.QuizAttempt.Score / @Model.Questions.Count()</p>
+        <p class="card-text">Score: @Model.QuizAttempt.Score / @Model.TotalAnswersSubmitted </p>
         <p class="card-text">Attempted On: @Model.QuizAttempt.StartTime</p>
     </div>
 </div>
@@ -26,7 +27,7 @@
             var userAnswer = Model.UserAnswers.FirstOrDefault(a => a.QuestionId == question.Id);
             <tr>
                 <td>@question.QuestionText</td>
-                <td>@userAnswer?.SelectedAnswer ?? "No Answer"</td>
+                <td>@userAnswer?.SelectedAnswer</td>
                 <td>@(userAnswer?.IsCorrect == true ? "Yes" : "No")</td>
             </tr>
         }

@@ -26,7 +26,7 @@ namespace STEMify.Data.Repositories
             TrueFalseQuestions = new TrueFalseQuestionRepository(_context);
             UserCourses = new UserCoursesRepository(_context);
             UserTasks = new UserTaskRepository(_context);
-            QuizAnswers = new Repository<QuizAnswer>(_context);
+            QuizAnswers = new QuizAnswerRepository(_context);
             QuizAttempts = new Repository<QuizAttempt>(_context);
         }
 
@@ -44,7 +44,7 @@ namespace STEMify.Data.Repositories
         public ITrueFalseQuestionRepository TrueFalseQuestions { get; }
         public IUserCoursesRepository UserCourses { get; }
         public IUserTaskRepository UserTasks { get; }
-        public IRepository<QuizAnswer> QuizAnswers { get; private set; }
+        public IQuizAnswerRepository QuizAnswers { get; private set; }
         public IRepository<QuizAttempt> QuizAttempts { get; private set; }
 
         public int Complete()
