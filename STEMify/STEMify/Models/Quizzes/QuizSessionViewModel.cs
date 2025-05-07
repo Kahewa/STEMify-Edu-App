@@ -48,5 +48,6 @@
         public QuizAttempt QuizAttempt { get; set; }
         public IEnumerable<UserAnswer> UserAnswers { get; set; }
         public IEnumerable<QuizQuestion> Questions { get; set; }
+        public int TotalAnswersSubmitted { get; internal set; }
     }
 }

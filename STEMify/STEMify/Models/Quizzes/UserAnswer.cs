@@ -1,5 +1,8 @@
-﻿namespace STEMify.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace STEMify.Models
 {
+    [Table("UserAnswers")]
     public class UserAnswer
     {
         public int Id { get; set; }

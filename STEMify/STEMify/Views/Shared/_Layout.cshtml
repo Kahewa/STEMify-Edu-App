@@ -8,10 +8,10 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - STEMify</title>
-    <link rel="icon" type="image/x-icon" href="~/favicon.ico" />
+
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
 
@@ -133,35 +133,36 @@
                     </a>
                 </li>
                 <li class="nav-item mb-2">
-                    <a class="nav-link sidebar-link text-green @(IsActive("Course"))" asp-controller="Course" asp-action="Index">
+                    <a class="nav-link sidebar-link text-green @(IsActive("Course"))" asp-controller="Course" asp-action="Index" style="text-decoration: none;">
                         <i class="fa fa-cog me-2 text-success"></i> Course
                     </a>
                 </li>
                 <li class="nav-item mb-2">
-                    <a class="nav-link sidebar-link text-green @(IsActive("Course"))" asp-controller="Home" asp-action="AllQuizzes">
+                    <a class="nav-link sidebar-link text-green @(IsActive("Quiz"))" asp-controller="Home" asp-action="AllQuizzes" style="text-decoration: none;">
                         <i class="fa fa-cog me-2 text-success"></i> All Quizzes
                     </a>
                 </li>
-                @if(!User.IsInRole("User")) { 
-                <li class="nav-item mb-2">
-                    <a class="nav-link sidebar-link text-green @(IsActive("Account"))" asp-controller="Account" asp-action="Users">
-                        <i class="fa fa-users me-2 text-success"></i> Users
-                    </a>
-                </li>
-                <li class="nav-item mb-2">
-                    <a class="nav-link sidebar-link text-green @(IsActive("Roles"))" asp-controller="Roles" asp-action="Index">
-                        <i class="fa fa-universal-access me-2 text-success"></i> Roles
-                    </a>
-                </li>
-                <li class="nav-item mb-2">
-                    <a class="nav-link text-green" asp-controller="Quiz" asp-action="Index">All Quizzes</a>
-                </li>
-                <li class="nav-item mb-2">
-                    <a class="nav-link text-green" asp-controller="Quiz" asp-action="AddQuiz">Add Quiz</a>
-                </li>
-                <li class="nav-item mb-2">
-                    <a class="nav-link text-green" asp-controller="Quiz" asp-action="AddQuestion">Add Question</a>
-                </li>
+                @if(User.IsInRole("Admin"))
+                {
+                    <li class="nav-item mb-2">
+                        <a class="nav-link sidebar-link text-green @(IsActive("Account"))" asp-controller="Account" asp-action="Users">
+                            <i class="fa fa-users me-2 text-success"></i> Users
+                        </a>
+                    </li>
+                    <li class="nav-item mb-2">
+                        <a class="nav-link sidebar-link text-green @(IsActive("Roles"))" asp-controller="Roles" asp-action="Index">
+                            <i class="fa fa-universal-access me-2 text-success"></i> Roles
+                        </a>
+                    </li>
+                    <li class="nav-item mb-2">
+                        <a class="nav-link text-green" asp-controller="Quiz" asp-action="Index">All Quizzes</a>
+                    </li>
+                    <li class="nav-item mb-2">
+                        <a class="nav-link text-green" asp-controller="Quiz" asp-action="AddQuiz">Add Quiz</a>
+                    </li>
+                    <li class="nav-item mb-2">
+                        <a class="nav-link text-green" asp-controller="Quiz" asp-action="AddQuestion">Add Question</a>
+                    </li>
                 }
             </ul>
 
@@ -196,9 +197,14 @@
             <header class="bg-white shadow-sm p-3 d-none d-md-block">
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <form class="d-flex" role="search">
-                        <input class="form-control" type="search" placeholder="Search" />
+                        @*<input class="form-control" type="search" placeholder="Search" />*@
+                        <input id="searchBox" class="form-control" placeholder="Search" />
+
+                        <ul id="searchResults" class="list-group position-absolute z-3"></ul>
                     </form>
+
                     <div class="mb-2">Hello, @User.Identity?.Name</div>
+                    <a href="https://wa.me/264817279679?text=Hello%2C%20I'm%20interested%20in%20your%20services%21">Contact the Administrator</a>
                 </div>
             </header>
 
@@ -212,7 +218,8 @@
         </div>
 
 
-
+        @* Testting *@
+        @* Testting *@
 
 
         @{
@@ -273,115 +280,6 @@
             </aside>
         }
     </div>
-
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-    @await RenderSectionAsync("Scripts", required: false)
-
-    <script>
-        $(function () {
-            const $sidebar = $('#sidebar');
-            const $rightSidebar = $('#right-sidebar');
-            const $mainContent = $('.flex-grow-1');
-
-            $('#show-sidebar').click(() => {
-                $rightSidebar.addClass('d-none');
-                $mainContent.removeClass('shifted-right');
-                $sidebar.removeClass('d-none');
-            });
-
-            $('#hide-sidebar').click(() => {
-                $sidebar.addClass('d-none');
-            });
-
-            $('#show-right-sidebar').click(() => {
-                $sidebar.addClass('d-none');
-                $rightSidebar.removeClass('d-none');
-                $mainContent.addClass('shifted-right');
-            });
-
-            $('#hide-right-sidebar').click(() => {
-                $rightSidebar.addClass('d-none');
-                $mainContent.removeClass('shifted-right');
-            });
-        });
-
-
-        document.addEventListener('DOMContentLoaded', function () {
-            const calendar = new FullCalendar.Calendar(document.getElementById('calendar'), {
-                initialView: 'dayGridMonth',
-                height: 300,
-                fixedWeekCount: false,
-                showNonCurrentDates: true,
-                events: [{ title: 'Today', start: new Date().toISOString().split('T')[0] }]
-            });
-            calendar.render();
-        });
-        //UPCOMING TASK DUMMY DATA
-        document.addEventListener('DOMContentLoaded', function () {
-            const upcomingTasks = [
-                { title: "Submit xxxxxxxxxx", due: "2025-05-02" },
-                { title: "Do homework for xxxxxx", due: "2025-05-03" },
-                { title: "Prepare for xxxx test", due: "2025-05-04" },
-                { title: "Attend revision class", due: "2025-05-05" }
-            ];
-
-            const taskContainer = document.getElementById('upcoming-tasks-body');
-            taskContainer.innerHTML = '';
-
-            upcomingTasks.forEach(task => {
-                const taskItem = document.createElement('div');
-                taskItem.className = 'd-flex justify-content-between align-items-center border-bottom py-2';
-
-                taskItem.innerHTML = `
-                        <div>
-                            <strong>${task.title}</strong><br>
-                            <small class="text-muted">${task.due}</small>
-                        </div>
-                        <button class="btn btn-sm btn-outline-danger" title="Delete Task">
-                            <i class="fa fa-trash"></i>
-                        </button>
-                    `;
-
-                taskContainer.appendChild(taskItem);
-            });
-
-            const calendar = new FullCalendar.Calendar(document.getElementById('calendar'), {
-                initialView: 'dayGridMonth',
-                height: 'auto', // Let it grow
-                contentHeight: 'auto',
-                fixedWeekCount: false,
-                showNonCurrentDates: true,
-                events: [{ title: 'Today', start: new Date().toISOString().split('T')[0] }]
-            });
-
-        });
-        //GRACE COURSES PAGE POP UP ON CLICK!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        function showPopup() {
-            const popup = document.getElementById("popup");
-            popup.style.display = "block";
-        }
-
-        function hidePopup() {
-            const popup = document.getElementById("popup");
-            popup.style.display = "none";
-        }
-
-
-        document.addEventListener("click", function (e) {
-            const popup = document.getElementById("popup");
-            const sidebar = document.getElementById("right-sidebar");
-            if (!popup.contains(e.target) && !sidebar.contains(e.target)) {
-                hidePopup();
-            }
-        });
-
-
-    </script>
     <!-- Add Task Modal -->
     <div class="modal fade" id="addTaskModal" tabindex="-1" aria-labelledby="addTaskModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -432,4 +330,126 @@
         </div>
     </div>
 </body>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="~/js/site.js" asp-append-version="true"></script>
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+
+@await RenderSectionAsync("Scripts", required: false)
+
+<script>
+    $(function () {
+        const $sidebar = $('#sidebar');
+        const $rightSidebar = $('#right-sidebar');
+        const $mainContent = $('.flex-grow-1');
+
+        $('#show-sidebar').click(() => {
+            $rightSidebar.addClass('d-none');
+            $mainContent.removeClass('shifted-right');
+            $sidebar.removeClass('d-none');
+        });
+
+        $('#hide-sidebar').click(() => {
+            $sidebar.addClass('d-none');
+        });
+
+        $('#show-right-sidebar').click(() => {
+            $sidebar.addClass('d-none');
+            $rightSidebar.removeClass('d-none');
+            $mainContent.addClass('shifted-right');
+        });
+
+        $('#hide-right-sidebar').click(() => {
+            $rightSidebar.addClass('d-none');
+            $mainContent.removeClass('shifted-right');
+        });
+    });
+
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const calendar = new FullCalendar.Calendar(document.getElementById('calendar'), {
+            initialView: 'dayGridMonth',
+            height: 300,
+            fixedWeekCount: false,
+            showNonCurrentDates: true,
+            events: [{ title: 'Today', start: new Date().toISOString().split('T')[0] }]
+        });
+        calendar.render();
+    });
+    //UPCOMING TASK DUMMY DATA
+    document.addEventListener('DOMContentLoaded', function () {
+        const upcomingTasks = [
+            { title: "Submit xxxxxxxxxx", due: "2025-05-02" },
+            { title: "Do homework for xxxxxx", due: "2025-05-03" },
+            { title: "Prepare for xxxx test", due: "2025-05-04" },
+            { title: "Attend revision class", due: "2025-05-05" }
+        ];
+
+        const taskContainer = document.getElementById('upcoming-tasks-body');
+        taskContainer.innerHTML = '';
+
+        upcomingTasks.forEach(task => {
+            const taskItem = document.createElement('div');
+            taskItem.className = 'd-flex justify-content-between align-items-center border-bottom py-2';
+
+            taskItem.innerHTML = `
+                                <div>
+                                    <strong>${task.title}</strong><br>
+                                    <small class="text-muted">${task.due}</small>
+                                </div>
+                                <button class="btn btn-sm btn-outline-danger" title="Delete Task">
+                                    <i class="fa fa-trash"></i>
+                                </button>
+                            `;
+
+            taskContainer.appendChild(taskItem);
+        });
+
+        const calendar = new FullCalendar.Calendar(document.getElementById('calendar'), {
+            initialView: 'dayGridMonth',
+            height: 'auto', // Let it grow
+            contentHeight: 'auto',
+            fixedWeekCount: false,
+            showNonCurrentDates: true,
+            events: [{ title: 'Today', start: new Date().toISOString().split('T')[0] }]
+        });
+
+    });
+    //GRACE COURSES PAGE POP UP ON CLICK!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    function showPopup() {
+        const popup = document.getElementById("popup");
+        popup.style.display = "block";
+    }
+
+    function hidePopup() {
+        const popup = document.getElementById("popup");
+        popup.style.display = "none";
+    }
+
+
+    document.addEventListener("click", function (e) {
+        const popup = document.getElementById("popup");
+        const sidebar = document.getElementById("right-sidebar");
+        if (!popup.contains(e.target) && !sidebar.contains(e.target)) {
+            hidePopup();
+        }
+    });
+
+//search functionality
+    $(function () {
+        $('#searchBox').on('change', function () {
+            let query = $(this).val();
+
+            if (query.length < 2) return $('#searchResults').empty();
+
+            $.get('/Home/Search', { term: query }, function (data) {
+                let list = data.map(item => `<li class='list-group-item'><a href='${item.url}'>${item.label}</a></li>`);
+                $('#searchResults').html(list.join(""));
+            });
+        });
+    });
+</script>
+
 </html>
+
+

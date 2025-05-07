@@ -7,5 +7,5 @@ namespace STEMify.Data.Interfaces
             Task AddQuizAsync(Quiz quiz);
             Task<Quiz> GetQuizByIdAsync(int quizId);
             Task<IEnumerable<Quiz>> GetAllQuizzesAsync();
-        }
+    }
     }
