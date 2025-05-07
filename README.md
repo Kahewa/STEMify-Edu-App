@@ -112,7 +112,7 @@ The app follows a multi-tier architecture with a clear separation of concerns:
    dotnet run
    ```
 
-6. Access the app at `http://localhost:5000`.
+6. Access the app at `http://localhost:*portnumbrt*`.
 
 ---
 
