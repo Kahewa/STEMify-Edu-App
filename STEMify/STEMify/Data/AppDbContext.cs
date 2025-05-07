@@ -1,6 +1,7 @@
 ﻿using STEMify.Models;
 using Microsoft.EntityFrameworkCore;
 using STEMify.Models.User;
+using STEMify.Models.Quizzes;
 
 namespace STEMify.Data
 {
@@ -25,6 +26,7 @@ namespace STEMify.Data
         public DbSet<QuizResult> QuizResults { get; set; }
         public DbSet<UserCourses> UserCourses { get; set; }
         public DbSet<UserTask> UserTasks { get; set; }
+        public DbSet<QuizAttempt> QuizAttempts { get; set; }
 
 
     }

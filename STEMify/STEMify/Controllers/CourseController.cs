@@ -7,7 +7,7 @@ using STEMify.Data.Interfaces;
 using STEMify.Models;
 
 namespace STEMify.Controllers
-{
+{ 
     [Authorize(Roles = "Admin")]
     public class CourseController : BaseController
     {

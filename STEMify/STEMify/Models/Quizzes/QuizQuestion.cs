@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Data;
 
 namespace STEMify.Models
 {
@@ -12,6 +11,7 @@ namespace STEMify.Models
         public string QuestionText { get; set; }
         public int QuestionType { get; set; } // "MultipleChoice", "FillInTheBlank", "True/False"
     }
+
     public class MultipleChoiceQuestion
     {
         public int Id { get; set; }
@@ -38,8 +38,6 @@ namespace STEMify.Models
         public int QuizQuestionId { get; set; }
         public string StatementText { get; set; }
         [Required(ErrorMessage = "Please select the correct answer.")]
-
         public bool Answer { get; set; }
     }
-
 }

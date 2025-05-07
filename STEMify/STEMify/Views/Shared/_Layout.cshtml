@@ -11,36 +11,37 @@
 
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
 
     <style>
         .sidebar {
-        min-height: 100vh;
+            min-height: 100vh;
         }
 
         aside {
-        min-height: 100vh;
+            min-height: 100vh;
         }
 
         @@media (min-width: 768px) {
-        .ms-md-250 {
-        margin-left: 250px;
-        }
+            .ms-md-250 {
+                margin-left: 250px;
+            }
 
-        .me-md-300 {
-        margin-right: 300px;
-        }
+            .me-md-300 {
+                margin-right: 300px;
+            }
         }
 
         @@media (max-width: 767.98px) {
-        .shifted {
-        margin-right: 300px !important;
-        }
+            .shifted {
+                margin-right: 300px !important;
+            }
 
-        .position-fixed {
-        z-index: 1035 !important;
-        }
+            .position-fixed {
+                z-index: 1035 !important;
+            }
 
             #sidebar {
                 width: 200px !important;
@@ -74,28 +75,26 @@
 
 
         #calendar {
-        font-size: 10px;
-        overflow: hidden;
+            font-size: 10px;
+            overflow: hidden;
         }
 
-        #calendar td,
-        #calendar th {
-        padding: 2px !important;
-        height: 20px !important;
-        width: 20px !important;
-        line-height: 1.2;
-        }
+            #calendar td,
+            #calendar th {
+                padding: 2px !important;
+                height: 20px !important;
+                width: 20px !important;
+                line-height: 1.2;
+            }
 
         .text-green {
             color: green !important;
         }
-
-
     </style>
 </head>
 
 <body class="bg-light">
-    
+
 
     <!-- Mobile Toggle -->
     <div class="d-md-none position-fixed top-0 start-0 w-100 bg-white shadow-sm p-2 z-1035 d-flex justify-content-between" style="height: 60px;">
@@ -116,86 +115,93 @@
         }  <!-- <<< This closing brace was missing -->
 
 
-        
-            <nav id="sidebar" class="bg-white sidebar text-dark p-3 d-none d-md-block position-fixed" style="width: 250px; height: 100vh; z-index: 1050; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <div class="logo text-success fw-bold">
-                        <i class="fas fa-atom me-2"></i> STEMify
-                    </div>
+
+        <nav id="sidebar" class="bg-white sidebar text-dark p-3 d-none d-md-block position-fixed" style="width: 250px; height: 100vh; z-index: 1050; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div class="logo text-success fw-bold">
+                    <i class="fas fa-atom me-2"></i> STEMify
                 </div>
+            </div>
             <!-- Mobile Close Button -->
             <button id="hide-sidebar" class="btn btn-sm btn-light d-md-none mb-3"><i class="fa fa-times"></i></button>
 
 
-                <ul class="nav flex-column mb-4">
-                    <li class="nav-item mb-2">
-                        <a class="nav-link sidebar-link text-green @(IsActive("Home"))" asp-controller="Home" asp-action="Dashboard">
-                            <i class="fa fa-home me-2 text-success"></i> Home
-                        </a>
-                    </li>
-                    <li class="nav-item mb-2">
-                        <a class="nav-link sidebar-link text-green @(IsActive("Course"))" asp-controller="Course" asp-action="Index">
-                            <i class="fa fa-cog me-2 text-success"></i> Course
-                        </a>
-                    </li>
-                    <li class="nav-item mb-2">
-                        <a class="nav-link sidebar-link text-green @(IsActive("Account"))" asp-controller="Account" asp-action="Users">
-                            <i class="fa fa-users me-2 text-success"></i> Users
-                        </a>
-                    </li>
-                    <li class="nav-item mb-2">
-                        <a class="nav-link sidebar-link text-green @(IsActive("Roles"))" asp-controller="Roles" asp-action="Index">
-                            <i class="fa fa-universal-access me-2 text-success"></i> Roles
-                        </a>
-                    </li>
-                    <li class="nav-item mb-2">
-                        <a class="nav-link text-green" asp-controller="Quiz" asp-action="Index">All Quizzes</a>
-                    </li>
-                    <li class="nav-item mb-2">
-                        <a class="nav-link text-green" asp-controller="Quiz" asp-action="AddQuiz">Add Quiz</a>
-                    </li>
-                    <li class="nav-item mb-2">
-                        <a class="nav-link text-green" asp-controller="Quiz" asp-action="AddQuestion">Add Question</a>
-                    </li>
-                </ul>
+            <ul class="nav flex-column mb-4">
+                <li class="nav-item mb-2">
+                    <a class="nav-link sidebar-link text-green @(IsActive("Home"))" asp-controller="Home" asp-action="Dashboard">
+                        <i class="fa fa-home me-2 text-success"></i> Home
+                    </a>
+                </li>
+                <li class="nav-item mb-2">
+                    <a class="nav-link sidebar-link text-green @(IsActive("Course"))" asp-controller="Course" asp-action="Index">
+                        <i class="fa fa-cog me-2 text-success"></i> Course
+                    </a>
+                </li>
+                <li class="nav-item mb-2">
+                    <a class="nav-link sidebar-link text-green @(IsActive("Course"))" asp-controller="Home" asp-action="AllQuizzes">
+                        <i class="fa fa-cog me-2 text-success"></i> All Quizzes
+                    </a>
+                </li>
+                @if(!User.IsInRole("User")) { 
+                <li class="nav-item mb-2">
+                    <a class="nav-link sidebar-link text-green @(IsActive("Account"))" asp-controller="Account" asp-action="Users">
+                        <i class="fa fa-users me-2 text-success"></i> Users
+                    </a>
+                </li>
+                <li class="nav-item mb-2">
+                    <a class="nav-link sidebar-link text-green @(IsActive("Roles"))" asp-controller="Roles" asp-action="Index">
+                        <i class="fa fa-universal-access me-2 text-success"></i> Roles
+                    </a>
+                </li>
+                <li class="nav-item mb-2">
+                    <a class="nav-link text-green" asp-controller="Quiz" asp-action="Index">All Quizzes</a>
+                </li>
+                <li class="nav-item mb-2">
+                    <a class="nav-link text-green" asp-controller="Quiz" asp-action="AddQuiz">Add Quiz</a>
+                </li>
+                <li class="nav-item mb-2">
+                    <a class="nav-link text-green" asp-controller="Quiz" asp-action="AddQuestion">Add Question</a>
+                </li>
+                }
+            </ul>
 
-                <hr />
-
-                
-
-                    <!-- Enhanced Support 24/7 -->
-                    <div class="text-white rounded-3 p-3 mb-4 shadow-sm" style="background-color: #008000;">
-                        <h6 class="fw-bold mb-1">💬 ChatBot</h6>
-                        <p class="mb-2 small">I'm here to help!</p>
-                        <button class="btn btn-outline-light btn-sm rounded-pill px-3">Start Chat</button>
-                    </div>
+            <hr />
 
 
 
-                    <!-- Logout Button -->
-                    <form asp-controller="Account" asp-action="Logout" method="post">
-                        <button type="submit" class="btn btn-sm w-100" style="color: #008000; border: 1px solid #008000;"
-                                onmouseover="this.style.backgroundColor='#008000'; this.style.color='white';"
-                                onmouseout="this.style.backgroundColor=''; this.style.color='#008000';">
-                            <i class="fa fa-sign-out-alt me-1"></i> Logout
-                        </button>
-                    </form>
-            </nav>
+            <!-- Enhanced Support 24/7 -->
+            <div class="text-white rounded-3 p-3 mb-4 shadow-sm" style="background-color: #008000;">
+                <h6 class="fw-bold mb-1">💬 ChatBot</h6>
+                <p class="mb-2 small">I'm here to help!</p>
+                <button class="btn btn-outline-light btn-sm rounded-pill px-3">Start Chat</button>
+            </div>
 
-        
+
+
+            <!-- Logout Button -->
+            <form asp-controller="Account" asp-action="Logout" method="post">
+                <button type="submit" class="btn btn-sm w-100" style="color: #008000; border: 1px solid #008000;"
+                        onmouseover="this.style.backgroundColor='#008000'; this.style.color='white';"
+                        onmouseout="this.style.backgroundColor=''; this.style.color='#008000';">
+                    <i class="fa fa-sign-out-alt me-1"></i> Logout
+                </button>
+            </form>
+        </nav>
+
+
 
         <!-- Main Content -->
 
         <div class="flex-grow-1 d-flex flex-column ms-md-250 me-md-300 pt-5 pt-md-0">
-                <header class="bg-white shadow-sm p-3 d-none d-md-block">
-                    <div class="d-flex justify-content-between align-items-center mb-4">
-                        <form class="d-flex" role="search">
-                            <input class="form-control" type="search" placeholder="Search" />
-                        </form>
-                        <div class="mb-2">Hello, @User.Identity?.Name</div>
-                    </div>
-                </header>
-            
+            <header class="bg-white shadow-sm p-3 d-none d-md-block">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <form class="d-flex" role="search">
+                        <input class="form-control" type="search" placeholder="Search" />
+                    </form>
+                    <div class="mb-2">Hello, @User.Identity?.Name</div>
+                </div>
+            </header>
+
             <main class="p-4 flex-grow-1">
                 @RenderBody()
             </main>
@@ -211,59 +217,60 @@
 
         @{
             //GRACE COURSES PAGE HIDE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-           var IsCourses = ViewData["IsCourses"] as bool? ?? false;
-       }
-        @if (!IsCourses)
-      { 
-                <aside id="right-sidebar" class="bg-white border-start p-3 d-none d-md-block position-fixed end-0" style="width: 300px; height: 100vh; z-index: 1050;">
-                    <div class="d-flex justify-content-between mb-3">
-                        <h6 class="text-secondary"><i class="fa fa-calendar-alt me-2"></i>Calendar</h6>
-                        <button id="hide-right-sidebar" class="btn btn-sm btn-light d-md-none"><i class="fa fa-times"></i></button>
-                    </div>
-                    <div id="calendar" class="mb-4" style="height: 180px;"></div>
+            var IsCourses = ViewData["IsCourses"] as bool? ?? false;
+        }
+        @if(!IsCourses)
+        {
+            <aside id="right-sidebar" class="bg-white border-start p-3 d-none d-md-block position-fixed end-0" style="width: 300px; height: 100vh; z-index: 1050;">
+                <div class="d-flex justify-content-between mb-3">
+                    <h6 class="text-secondary"><i class="fa fa-calendar-alt me-2"></i>Calendar</h6>
+                    <button id="hide-right-sidebar" class="btn btn-sm btn-light d-md-none"><i class="fa fa-times"></i></button>
+                </div>
+                <div id="calendar" class="mb-4" style="height: 180px;"></div>
 
-                    <h6 class="text-secondary mb-3"><i class="fa fa-list-check me-2"></i>To-Do List</h6>
-                    <ul id="todo-list" class="list-group mb-3">
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            TASK/S OF THE DAY
-                            <button class="btn btn-sm btn-danger btn-delete"><i class="fa fa-trash"></i></button>
-                        </li>
-                    </ul>
-                    <div class="d-flex gap-2 mb-3">
-                        <button class="btn btn-sm w-50"
-                                style="background-color: #008000; color: white; border: 1px solid #008000;"
-                                onmouseover="this.style.backgroundColor='#006400'"
-                                onmouseout="this.style.backgroundColor='#008000'"
-                                data-bs-toggle="modal" data-bs-target="#upcomingTasksModal">
-                            Upcoming Tasks
-                        </button>
+                <h6 class="text-secondary mb-3"><i class="fa fa-list-check me-2"></i>To-Do List</h6>
+                <ul id="todo-list" class="list-group mb-3">
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        TASK/S OF THE DAY
+                        <button class="btn btn-sm btn-danger btn-delete"><i class="fa fa-trash"></i></button>
+                    </li>
+                </ul>
+                <div class="d-flex gap-2 mb-3">
+                    <button class="btn btn-sm w-50"
+                            style="background-color: #008000; color: white; border: 1px solid #008000;"
+                            onmouseover="this.style.backgroundColor='#006400'"
+                            onmouseout="this.style.backgroundColor='#008000'"
+                            data-bs-toggle="modal" data-bs-target="#upcomingTasksModal">
+                        Upcoming Tasks
+                    </button>
 
-                        <button class="btn btn-sm w-50"
-                                style="background-color: #008000; color: white; border: 1px solid #008000;"
-                                onmouseover="this.style.backgroundColor='#006400'"
-                                onmouseout="this.style.backgroundColor='#008000'"
-                                data-bs-toggle="modal" data-bs-target="#addTaskModal">
-                            Add Task
-                        </button>
-                    </div>
+                    <button class="btn btn-sm w-50"
+                            style="background-color: #008000; color: white; border: 1px solid #008000;"
+                            onmouseover="this.style.backgroundColor='#006400'"
+                            onmouseout="this.style.backgroundColor='#008000'"
+                            data-bs-toggle="modal" data-bs-target="#addTaskModal">
+                        Add Task
+                    </button>
+                </div>
 
-                </aside>
-            }
+            </aside>
+        }
 
         <!--GRACE COURSES PAGE RIGHT SIDEBAR!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!-->
-        @if (ViewData["IsCourses"] as bool? == true)
+        @if(ViewData["IsCourses"] as bool? == true)
         {
-<aside id="right-sidebar" class="bg-white border-start p-3 d-none d-md-block position-fixed end-0" style="width: 300px; height: 100vh; z-index: 1050;">                <h4 class="text-center fw-bold text-success mb-4">Tutorials</h4>
+            <aside id="right-sidebar" class="bg-white border-start p-3 d-none d-md-block position-fixed end-0" style="width: 300px; height: 100vh; z-index: 1050;">
+                <h4 class="text-center fw-bold text-success mb-4">Tutorials</h4>
 
-            <div class="d-grid gap-3">
-                <button class="btn btn w-100" style="background-color:  #008080; color: white;" data-bs-toggle="modal" data-bs-target="#linkModal">Button 1</button>
-                <button class="btn btn-success w-100" data-bs-toggle="modal" data-bs-target="#linkModal">Button 2</button>
-                <button class="btn btn w-100" style="background-color:  #008080; color: white;" data-bs-toggle="modal" data-bs-target="#linkModal">Button 3</button>
-                <button class="btn btn-success w-100" data-bs-toggle="modal" data-bs-target="#linkModal">Button 4</button>
-                <button class="btn btn w-100" style="background-color:  #008080; color: white;" data-bs-toggle="modal" data-bs-target="#linkModal">Button 5</button>
-                <button class="btn btn-success w-100" data-bs-toggle="modal" data-bs-target="#linkModal">Button 6</button>
-            </div>
-        </aside>
+                <div class="d-grid gap-3">
+                    <button class="btn btn w-100" style="background-color:  #008080; color: white;" data-bs-toggle="modal" data-bs-target="#linkModal">Button 1</button>
+                    <button class="btn btn-success w-100" data-bs-toggle="modal" data-bs-target="#linkModal">Button 2</button>
+                    <button class="btn btn w-100" style="background-color:  #008080; color: white;" data-bs-toggle="modal" data-bs-target="#linkModal">Button 3</button>
+                    <button class="btn btn-success w-100" data-bs-toggle="modal" data-bs-target="#linkModal">Button 4</button>
+                    <button class="btn btn w-100" style="background-color:  #008080; color: white;" data-bs-toggle="modal" data-bs-target="#linkModal">Button 5</button>
+                    <button class="btn btn-success w-100" data-bs-toggle="modal" data-bs-target="#linkModal">Button 6</button>
+                </div>
+            </aside>
         }
     </div>
 
@@ -271,11 +278,12 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     @await RenderSectionAsync("Scripts", required: false)
 
     <script>
-                $(function () {
+        $(function () {
             const $sidebar = $('#sidebar');
             const $rightSidebar = $('#right-sidebar');
             const $mainContent = $('.flex-grow-1');
@@ -314,7 +322,7 @@
             calendar.render();
         });
         //UPCOMING TASK DUMMY DATA
-            document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function () {
             const upcomingTasks = [
                 { title: "Submit xxxxxxxxxx", due: "2025-05-02" },
                 { title: "Do homework for xxxxxx", due: "2025-05-03" },
@@ -330,48 +338,48 @@
                 taskItem.className = 'd-flex justify-content-between align-items-center border-bottom py-2';
 
                 taskItem.innerHTML = `
-                    <div>
-                        <strong>${task.title}</strong><br>
-                        <small class="text-muted">${task.due}</small>
-                    </div>
-                    <button class="btn btn-sm btn-outline-danger" title="Delete Task">
-                        <i class="fa fa-trash"></i>
-                    </button>
-                `;
+                        <div>
+                            <strong>${task.title}</strong><br>
+                            <small class="text-muted">${task.due}</small>
+                        </div>
+                        <button class="btn btn-sm btn-outline-danger" title="Delete Task">
+                            <i class="fa fa-trash"></i>
+                        </button>
+                    `;
 
                 taskContainer.appendChild(taskItem);
             });
 
-                    const calendar = new FullCalendar.Calendar(document.getElementById('calendar'), {
-            initialView: 'dayGridMonth',
-            height: 'auto', // Let it grow
-            contentHeight: 'auto',
-            fixedWeekCount: false,
-            showNonCurrentDates: true,
-            events: [{ title: 'Today', start: new Date().toISOString().split('T')[0] }]
-        });
+            const calendar = new FullCalendar.Calendar(document.getElementById('calendar'), {
+                initialView: 'dayGridMonth',
+                height: 'auto', // Let it grow
+                contentHeight: 'auto',
+                fixedWeekCount: false,
+                showNonCurrentDates: true,
+                events: [{ title: 'Today', start: new Date().toISOString().split('T')[0] }]
+            });
 
         });
         //GRACE COURSES PAGE POP UP ON CLICK!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-             function showPopup() {
+        function showPopup() {
             const popup = document.getElementById("popup");
             popup.style.display = "block";
-              }
+        }
 
         function hidePopup() {
             const popup = document.getElementById("popup");
-             popup.style.display = "none";
+            popup.style.display = "none";
         }
 
-      
-       document.addEventListener("click", function (e) {
-           const popup = document.getElementById("popup");
-           const sidebar = document.getElementById("right-sidebar");
-           if (!popup.contains(e.target) && !sidebar.contains(e.target)) {
+
+        document.addEventListener("click", function (e) {
+            const popup = document.getElementById("popup");
+            const sidebar = document.getElementById("right-sidebar");
+            if (!popup.contains(e.target) && !sidebar.contains(e.target)) {
                 hidePopup();
             }
         });
-      
+
 
     </script>
     <!-- Add Task Modal -->
@@ -407,21 +415,21 @@
             </div>
         </div>
     </div>
-   
+
     <!--GRACE COURSES PAGE POP UP DATA!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!-->
     <!-- Link Modal -->
-     <div class="modal fade" id="linkModal" tabindex="-1" aria-labelledby="linkModalLabel" aria-hidden="true">
+    <div class="modal fade" id="linkModal" tabindex="-1" aria-labelledby="linkModalLabel" aria-hidden="true">
         <div class="modal-dialog">
-           <div class="modal-content">
-               <div class="modal-header">
-                    <h5 class="modal-title" id="linkModalLabel">Link</h5> 
-                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-               </div>
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="linkModalLabel">Link</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
                 <div class="modal-body">
                     link
-               </div>
-           </div>
+                </div>
+            </div>
         </div>
-     </div>
+    </div>
 </body>
 </html>

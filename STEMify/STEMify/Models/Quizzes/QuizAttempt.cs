@@ -18,5 +18,4 @@
         public string UserAnswer { get; set; }
         public bool IsCorrect { get; set; }
     }
-
 }

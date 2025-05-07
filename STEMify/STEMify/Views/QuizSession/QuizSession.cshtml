@@ -1,0 +1,103 @@
+﻿@model STEMify.Models.Quizzes.QuizSessionViewModel
+
+<h1>@Model.QuizTitle</h1>
+
+<div class="text-center my-4">
+    <button id="startQuizButton" class="btn btn-primary">Start Quiz</button>
+</div>
+
+<!-- Question Modal -->
+<div class="modal fade" id="questionModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Question <span id="questionNumber"></span></h5>
+            </div>
+            <div class="modal-body">
+                <p id="questionText"></p>
+                <div id="optionsContainer"></div>
+            </div>
+            <div class="modal-footer">
+                <button id="nextButton" class="btn btn-secondary">Next</button>
+                <button id="submitButton" class="btn btn-success" style="display: none;">Submit Quiz</button>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script>
+        const questions = @Html.Raw(Json.Serialize(Model.Questions));
+        let currentIndex = 0;
+        let userAnswers = [];
+
+        document.getElementById("startQuizButton").addEventListener("click", () => {
+            document.getElementById("startQuizButton").style.display = "none";
+            loadQuestion(0);
+            showModal();
+        });
+
+        document.getElementById("nextButton").addEventListener("click", () => {
+            saveAnswer();
+            currentIndex++;
+            if (currentIndex < questions.length) {
+                loadQuestion(currentIndex);
+            } else {
+                document.getElementById("nextButton").style.display = "none";
+                document.getElementById("submitButton").style.display = "inline-block";
+            }
+        });
+
+        document.getElementById("submitButton").addEventListener("click", () => {
+            saveAnswer();
+            fetch('/QuizSession/SubmitAnswers', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ quizId: @Model.QuizId, answers: userAnswers })
+            }).then(response => {
+                if (response.ok) {
+                    window.location.href = `/QuizSession/Summary?quizAttemptId=${@Model.QuizId}`;
+                }
+            });
+        });
+
+        function loadQuestion(index) {
+            const question = questions[index];
+            document.getElementById("questionNumber").innerText = index + 1;
+            document.getElementById("questionText").innerText = question.QuestionText;
+
+            const optionsContainer = document.getElementById("optionsContainer");
+            optionsContainer.innerHTML = "";
+
+            let viewName = '';
+            switch (question.QuestionType) {
+                case 2: viewName = '_MultipleChoiceQuestion'; break;
+                case 3: viewName = '_FillInTheBlankQuestion'; break;
+                case 4: viewName = '_TrueFalseQuestion'; break;
+                default: return;
+            }
+
+            fetch(`/QuizSession/RenderPartial?viewName=${viewName}&model=${encodeURIComponent(JSON.stringify(question))}`)
+                .then(response => response.text())
+                .then(html => {
+                    optionsContainer.innerHTML = html;
+                    console.log("Rendered partial:", viewName);
+                })
+                .catch(err => console.error("Partial load error:", err));
+        }
+
+        function saveAnswer() {
+            const selectedOpti document.querySelector("input[name='answer']:checked")?.value ||
+                                   document.querySelector("input[name='answer']")?.value;
+            userAnswers.push({
+                QuestionId: questions[currentIndex].QuestionId,
+                SelectedAnswer: selectedOption
+            });
+        }
+
+        function showModal() {
+            const modal = new bootstrap.Modal(document.getElementById("questionModal"));
+            modal.show();
+        }
+    </script>
+}
+

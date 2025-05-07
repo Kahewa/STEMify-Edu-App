@@ -126,7 +126,13 @@ namespace STEMify.Controllers
 
             return RedirectToAction("UserCourses");
         }
-
+        
+        [Authorize]
+        public IActionResult AllQuizzes()
+        {
+            var Quizzes = UnitOfWork.Quizzes.GetAll().ToList();
+            return View(Quizzes);
+        }
         public IActionResult Error()
         {
             return View();
