@@ -7,5 +7,4 @@
         public string SelectedAnswer { get; set; }
         public int QuestionType { get; set; } // For rendering logic
     }
-
 }

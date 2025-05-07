@@ -1,0 +1,9 @@
+﻿@model STEMify.Models.Quizzes.QuestionViewModel
+
+@foreach(var option in Model.Options)
+{
+    <div class="form-check">
+        <input type="radio" class="form-check-input" name="answer" value="@option.Key" id="opt-@option.Key" />
+        <label class="form-check-label" for="opt-@option.Key">@option.Value</label>
+    </div>
+}

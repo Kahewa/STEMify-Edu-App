@@ -1,0 +1,36 @@
+﻿@model STEMify.Models.Quizzes.QuizSummaryViewModel
+
+<h1>Quiz Summary</h1>
+
+<div class="card my-4">
+    <div class="card-body">
+        <h5 class="card-title">Quiz: @Model.QuizAttempt.QuizId</h5>
+        <p class="card-text">Score: @Model.QuizAttempt.Score / @Model.Questions.Count()</p>
+        <p class="card-text">Attempted On: @Model.QuizAttempt.StartTime</p>
+    </div>
+</div>
+
+<h2>Questions & Answers</h2>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Question</th>
+            <th>Your Answer</th>
+            <th>Correct?</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var question in Model.Questions)
+        {
+            var userAnswer = Model.UserAnswers.FirstOrDefault(a => a.QuestionId == question.Id);
+            <tr>
+                <td>@question.QuestionText</td>
+                <td>@userAnswer?.SelectedAnswer ?? "No Answer"</td>
+                <td>@(userAnswer?.IsCorrect == true ? "Yes" : "No")</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a href="/" class="btn btn-primary">Back to Home</a>

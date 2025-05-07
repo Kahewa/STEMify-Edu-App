@@ -1,38 +1,52 @@
-﻿@model STEMify.Models.Quizzes.QuizSubmissionViewModel
+﻿@model STEMify.Models.Quizzes.QuizSessionViewModel
 
-<h2>Quiz</h2>
+<h1>@Model.QuizTitle</h1>
 
-<form asp-action="SubmitAnswer" method="post">
-    @for(int i = 0; i < Model.Answers.Count; i++)
+<form method="post" asp-controller="QuizSession" asp-action="SubmitAnswers">
+    <input type="hidden" name="quizId" value="@Model.QuizId" />
+    <input type="hidden" name="AttemptId" value="@Model.AttemptId" />
+
+    @for(int i = 0; i < Model.Questions.Count; i++)
     {
-        <div>
-            <p>@Model.Answers[i].QuestionText</p>
-            <input type="hidden" asp-for="Answers[@i].QuestionId" />
-            <input type="hidden" asp-for="Answers[@i].QuestionType" />
+        var question = Model.Questions[i];
+        <div class="card my-3">
+            <div class="card-header">
+                <strong>Question @(i + 1):</strong> @question.QuestionText
+            </div>
+            <div class="card-body">
+                @if(question.QuestionType == 2) // Multiple Choice
+                {
+                    foreach(var option in question.Options)
+                    {
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="answers[@i].SelectedAnswer" value="@option.Key" id="q@question.QuestionId_@option.Key" />
+                            <label class="form-check-label" for="q@question.QuestionId_@option.Key">@option.Value</label>
+                        </div>
+                    }
+                }
+                else if(question.QuestionType == 3) // Fill in the Blank
+                {
+                    <input class="form-control" type="text" name="answers[@i].SelectedAnswer" />
+                }
+                else if(question.QuestionType == 4) // True/False
+                {
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="answers[@i].SelectedAnswer" value="True" id="q@question.QuestionId_True" />
+                        <label class="form-check-label" for="q@question.QuestionId_True">True</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="answers[@i].SelectedAnswer" value="False" id="q@question.QuestionId_False" />
+                        <label class="form-check-label" for="q@question.QuestionId_False">False</label>
+                    </div>
+                }
 
-            @if(Model.Answers[i].QuestionType == 1) // Multiple Choice
-            {
-                <div>
-                    <input type="radio" asp-for="Answers[@i].SelectedAnswer" value="A" /> Option A<br />
-                    <input type="radio" asp-for="Answers[@i].SelectedAnswer" value="B" /> Option B<br />
-                    <input type="radio" asp-for="Answers[@i].SelectedAnswer" value="C" /> Option C<br />
-                    <input type="radio" asp-for="Answers[@i].SelectedAnswer" value="D" /> Option D<br />
-                </div>
-            }
-            else if(Model.Answers[i].QuestionType == 2) // Fill in the Blank
-            {
-                <input type="text" asp-for="Answers[@i].SelectedAnswer" placeholder="Your Answer" />
-            }
-            else if(Model.Answers[i].QuestionType == 3) // True/False
-            {
-                <div>
-                    <input type="radio" asp-for="Answers[@i].SelectedAnswer" value="True" /> True<br />
-                    <input type="radio" asp-for="Answers[@i].SelectedAnswer" value="False" /> False<br />
-                </div>
-            }
+                <!-- Hidden input for the Question ID -->
+                <input type="hidden" name="answers[@i].QuestionId" value="@question.QuestionId" />
+            </div>
         </div>
-        <hr />
     }
 
-    <button type="submit">Submit</button>
+    <div class="text-center mt-4">
+        <button type="submit" class="btn btn-success">Submit Quiz</button>
+    </div>
 </form>

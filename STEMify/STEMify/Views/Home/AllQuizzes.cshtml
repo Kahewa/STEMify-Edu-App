@@ -1,0 +1,40 @@
+﻿@model IEnumerable<STEMify.Models.Quiz>
+
+
+<h1>Quizzess index</h1>
+
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Quiz Name</th>
+            <th>Created At</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var quiz in Model)
+        {
+            <tr>
+                <td>@quiz.Title</td>
+                <td>
+                    <a class="btn btn-info" asp-action="StartQuiz" asp-controller="QuizSession" asp-route-id="@quiz.Id"
+                       data-id="@quiz.Id" data-name="@quiz.Title">
+                        Start Quiz
+                    </a>
+                </td>
+                @*<td>@quiz.CreatedDate.ToString("yyyy-MM-dd")</td>*@
+                @*<td>
+            <a href="#" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal"
+               data-id="@quiz.Id" data-name="@quiz.Title">
+                Delete
+            </a>
+            <a class="btn btn-info" asp-action="EditQuiz" asp-route-id="@quiz.Id"
+               data-id="@quiz.Id" data-name="@quiz.Title">
+                Edit
+            </a>
+
+        </td>*@
+            </tr>
+        }
+    </tbody>
+</table>
