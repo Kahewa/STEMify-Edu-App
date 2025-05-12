@@ -45,7 +45,7 @@ else
 
             <div class="col-md-4 mb-4">
                 <div class="card shadow-sm border-0 @bgClass text-@(isDark ? "white" : "dark")">
-                    <a href="@Url.Action("Details", "Course", new { id = course.CourseID })" class="ratio ratio-16x9">
+                    <a href="@Url.Action("Details", "Home", new { id = course.CourseID })" class="ratio ratio-16x9">
                         <img src="@(string.IsNullOrEmpty(course.ImageUrl) ? defaultImage : course.ImageUrl)"
                              class="img-fluid rounded-top object-fit-cover"
                              alt="Course Image"

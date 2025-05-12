@@ -1,7 +1,36 @@
 ﻿@page
 @model STEMify.Views.Home.DashboardModel
 @{
+    var QuizzesCompleted = ViewBag.QuizzesCompleted;
+    var TotalQuizzes = ViewBag.TotalQuizzes;
+    var QuizzesAttempted = ViewBag.QuizzesAttempted;
+    var Courses = ViewBag.Courses;
+
+
+    //ViewBag.TotalQuizzes = totalQuizzes;
+    //ViewBag.QuizzesCompleted = totalAnswers;
+    //ViewBag.QuizzesAttempted = quizzesAttempted;
 }
+<style>
+    .chart-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(255, 255, 255, 0.85);
+        color: #4CAF50;
+        font-weight: bold;
+        font-size: 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 5;
+        border-radius: 10px;
+        pointer-events: none;
+    }
+</style>
+
 <div class="container mt-5">
     <!-- User Info Section -->
     <div class="card shadow-sm border-0 mb-4" style="border-radius: 15px; overflow: hidden;">
@@ -21,8 +50,8 @@
             <div class="row mt-4">
                 <div class="col-md-4 mb-3 mb-md-0">
                     <div class="p-3 text-center stat-card" style="background-color: #E8F5E9; border-radius: 10px;">
-                        <div class="stat-number" style="font-size: 28px; font-weight: 700; color: #2E8B57;">27</div>
-                        <div class="stat-label" style="font-size: 14px; color: #616161;">Quizzes Passed</div>
+                        <div class="stat-number" style="font-size: 28px; font-weight: 700; color: #2E8B57;">@QuizzesCompleted</div>
+                        <div class="stat-label" style="font-size: 14px; color: #616161;">Quiz Attempts</div>
                         <div class="progress mt-2" style="height: 6px;">
                             <div class="progress-bar" role="progressbar" style="width: 85%; background-color: #2E8B57;"></div>
                         </div>
@@ -31,8 +60,8 @@
 
                 <div class="col-md-4 mb-3 mb-md-0">
                     <div class="p-3 text-center stat-card" style="background-color: #E8F5E9; border-radius: 10px;">
-                        <div class="stat-number" style="font-size: 28px; font-weight: 700; color: #2E8B57;">27<span style="font-size: 16px;">min</span></div>
-                        <div class="stat-label" style="font-size: 14px; color: #616161;">Fastest Time</div>
+                        <div class="stat-number" style="font-size: 28px; font-weight: 700; color: #2E8B57;">@TotalQuizzes </div>
+                        <div class="stat-label" style="font-size: 14px; color: #616161;">Total Quizzes Available</div>
                         <div class="progress mt-2" style="height: 6px;">
                             <div class="progress-bar" role="progressbar" style="width: 65%; background-color: #2E8B57;"></div>
                         </div>
@@ -41,8 +70,8 @@
 
                 <div class="col-md-4">
                     <div class="p-3 text-center stat-card" style="background-color: #E8F5E9; border-radius: 10px;">
-                        <div class="stat-number" style="font-size: 28px; font-weight: 700; color: #2E8B57;">200</div>
-                        <div class="stat-label" style="font-size: 14px; color: #616161;">Correct Answers</div>
+                        <div class="stat-number" style="font-size: 28px; font-weight: 700; color: #2E8B57;">@QuizzesAttempted / @TotalQuizzes</div>
+                        <div class="stat-label" style="font-size: 14px; color: #616161;">Total Quizzes Attempted</div>
                         <div class="progress mt-2" style="height: 6px;">
                             <div class="progress-bar" role="progressbar" style="width: 92%; background-color: #2E8B57;"></div>
                         </div>
@@ -53,157 +82,3 @@
     </div>
 </div>
 
-<!-- Font Awesome for icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-
-<!-- Optional: Add hover effects -->
-<style>
-    .stat-card {
-        transition: all 0.3s ease;
-    }
-
-        .stat-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 5px 15px rgba(46, 139, 87, 0.1);
-        }
-</style>
-
-    <!-- User Progress Section -->
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h3 style="color: green;">My Learning Progress</h3>
-        <a href="#" style="color: green;">View Detailed Report</a>
-    </div>
-
-    <!-- Progress Graph Container -->
-    <div class="card shadow-sm p-4 mb-4" style="border-radius: 10px;">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <h5 class="mb-0" style="color: #4CAF50;">Module Completion Progress</h5>
-            <div>
-                <select class="form-select form-select-sm" style="width: 150px; border-color: #4CAF50;">
-                    <option>Last 30 Days</option>
-                    <option>Last 3 Months</option>
-                    <option>All Time</option>
-                </select>
-            </div>
-        </div>
-
-        <!-- Progress Chart -->
-        <div style="height: 300px;">
-            <canvas id="progressChart"></canvas>
-        </div>
-
-        <!-- Module Progress Details -->
-        <div class="row mt-4">
-            <div class="col-md-6">
-                <div class="d-flex align-items-center mb-3">
-                    <div style="width: 20px; height: 20px; background-color: #4CAF50; border-radius: 4px; margin-right: 10px;"></div>
-                    <span>Introduction to Programming</span>
-                    <span class="ms-auto fw-bold">78%</span>
-                </div>
-                <div class="progress" style="height: 8px;">
-                    <div class="progress-bar" role="progressbar" style="width: 78%; background-color: #4CAF50;"></div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="d-flex align-items-center mb-3">
-                    <div style="width: 20px; height: 20px; background-color: #8BC34A; border-radius: 4px; margin-right: 10px;"></div>
-                    <span>Web Development Basics</span>
-                    <span class="ms-auto fw-bold">65%</span>
-                </div>
-                <div class="progress" style="height: 8px;">
-                    <div class="progress-bar" role="progressbar" style="width: 65%; background-color: #8BC34A;"></div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="d-flex align-items-center mb-3">
-                    <div style="width: 20px; height: 20px; background-color: #CDDC39; border-radius: 4px; margin-right: 10px;"></div>
-                    <span>Data Science Fundamentals</span>
-                    <span class="ms-auto fw-bold">42%</span>
-                </div>
-                <div class="progress" style="height: 8px;">
-                    <div class="progress-bar" role="progressbar" style="width: 42%; background-color: #CDDC39;"></div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="d-flex align-items-center mb-3">
-                    <div style="width: 20px; height: 20px; background-color: #FFC107; border-radius: 4px; margin-right: 10px;"></div>
-                    <span>AI Concepts</span>
-                    <span class="ms-auto fw-bold">35%</span>
-                </div>
-                <div class="progress" style="height: 8px;">
-                    <div class="progress-bar" role="progressbar" style="width: 35%; background-color: #FFC107;"></div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Chart.js Script for Interactive Graph -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const ctx = document.getElementById('progressChart').getContext('2d');
-            const progressChart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4', 'Week 5', 'Week 6'],
-                    datasets: [
-                        {
-                            label: 'Introduction to Programming',
-                            data: [15, 30, 45, 60, 70, 78],
-                            backgroundColor: '#4CAF50',
-                            borderRadius: 4
-                        },
-                        {
-                            label: 'Web Development',
-                            data: [10, 25, 40, 55, 60, 65],
-                            backgroundColor: '#8BC34A',
-                            borderRadius: 4
-                        },
-                        {
-                            label: 'Data Science',
-                            data: [5, 15, 25, 35, 40, 42],
-                            backgroundColor: '#CDDC39',
-                            borderRadius: 4
-                        },
-                        {
-                            label: 'AI Concepts',
-                            data: [0, 10, 20, 30, 33, 35],
-                            backgroundColor: '#FFC107',
-                            borderRadius: 4
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    scales: {
-                        x: {
-                            grid: {
-                                display: false
-                            }
-                        },
-                        y: {
-                            beginAtZero: true,
-                            max: 100,
-                            ticks: {
-                                callback: function(value) {
-                                    return value + '%';
-                                }
-                            }
-                        }
-                    },
-                    plugins: {
-                        legend: {
-                            position: 'bottom',
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    return context.dataset.label + ': ' + context.raw + '%';
-                                }
-                            }
-                        }
-                    }
-                }
-            });
-        });
-    </script>

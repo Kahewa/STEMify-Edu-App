@@ -1,0 +1,13 @@
+﻿@model STEMify.Models.Quiz
+
+@using(Html.BeginForm("LinkQuizToCourse", "Quiz", FormMethod.Post))
+{
+    @Html.HiddenFor(m => m.Id)
+
+    <div class="form-group">
+        <label>Select Course to Link "@Model.Title"</label>
+        @Html.DropDownList("CourseID", ViewBag.SelectList as SelectList, "Choose a course", new { @class = "form-control" })
+    </div>
+
+    <button type="submit" class="btn btn-primary">Link Quiz</button>
+}
