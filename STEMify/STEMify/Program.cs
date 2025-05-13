@@ -52,6 +52,10 @@ builder.Services.AddScoped<IUnitOfWork>(provider =>
 // Register generic repository
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 
+builder.Services.AddHttpClient();
+
+
+
 var app = builder.Build();
 
 // HTTP request pipeline configuration

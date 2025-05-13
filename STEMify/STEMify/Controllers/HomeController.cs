@@ -4,24 +4,30 @@ using STEMify.Models;
 using STEMify.Data.Interfaces;
 using STEMify.Models.User;
 using Microsoft.EntityFrameworkCore;
+using System.Net.Http;
+using System.Text;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace STEMify.Controllers
 {
     public class HomeController : BaseController
     {
-        public HomeController(IUnitOfWork unitOfWork) : base(unitOfWork)
-        {
-        }
+        private readonly HttpClient _httpClient;
 
+        public HomeController(IUnitOfWork unitOfWork, HttpClient httpClient) : base(unitOfWork)
+        {
+            _httpClient = httpClient;
+        }
 
         public IActionResult Index()
         {
             return View();
         }
+
         [Authorize]
         public IActionResult Dashboard()
         {
-
             var userCourseIds = UnitOfWork.UserCourses
                 .GetAll()
                 .Where(x => x.User == User.Identity.Name)
@@ -57,19 +63,20 @@ namespace STEMify.Controllers
             return View();
         }
 
-
         [Authorize]
         public ActionResult About()
         {
             ViewData["Message"] = "Your application description page.";
             return View();
         }
+
         [Authorize]
         public IActionResult Contact()
         {
             ViewData["Message"] = "Your contact page.";
             return View();
         }
+
         [Authorize]
         public IActionResult Courses()
         {
@@ -109,10 +116,9 @@ namespace STEMify.Controllers
         }
 
         [Authorize]
-        // FavoriteCourse - Adds course to user favorites if not already added
         public async Task<IActionResult> FavoriteCourse(int id)
         {
-            var course = await UnitOfWork.Courses.GetAsync(id); 
+            var course = await UnitOfWork.Courses.GetAsync(id);
 
             if(course == null)
             {
@@ -137,8 +143,8 @@ namespace STEMify.Controllers
 
             return RedirectToAction("Courses");
         }
+
         [Authorize]
-        // Displays all user-favorited courses
         public IActionResult UserCourses()
         {
             var userCourseIds = UnitOfWork.UserCourses
@@ -154,7 +160,7 @@ namespace STEMify.Controllers
 
             return View(courses);
         }
-        // RemoveFavoriteCourse - Removes a course from user favorites
+
         [HttpPost]
         [Authorize]
         public IActionResult RemoveFavoriteCourse(int id)
@@ -173,28 +179,75 @@ namespace STEMify.Controllers
 
             return RedirectToAction("UserCourses");
         }
-        
+
         [Authorize]
         public IActionResult AllQuizzes()
         {
             var Quizzes = UnitOfWork.Quizzes.GetAll().ToList();
             return View(Quizzes);
         }
+
         public IActionResult Error()
         {
             return View();
         }
+
         [HttpGet]
         public IActionResult Search(string term)
         {
             var results = UnitOfWork.Courses.GetAll()
                 .Where(c => c.CourseName.Contains(term) || c.Description.Contains(term))
-                .Select(c => new {
+                .Select(c => new
+                {
                     Label = c.CourseName,
                     Url = Url.Action("Details", "Courses", new { id = c.CourseID })
                 }).ToList();
 
             return Json(results);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> SearchStem(string query)
+        {
+            if(string.IsNullOrWhiteSpace(query))
+            {
+                return BadRequest("Query cannot be empty.");
+            }
+            string apiKey = UnitOfWork.DifficultyLevels.Get(99).LevelName;
+
+            //string apiKey = "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"; // Replace with your OpenAI API key
+            string apiUrl = "https://api.openai.com/v1/chat/completions";
+
+            var requestBody = new
+            {
+                model = "gpt-4",
+                messages = new[]
+                {
+            new { role = "system", content = "You are a helpful assistant specialized in all STEM related topics. Always give relevant and verified information. Include two helpful online resource links if possible." },
+            new { role = "user", content = query }
+        },
+                max_tokens = 150,
+                temperature = 0.7
+            };
+
+            var content = new StringContent(JsonConvert.SerializeObject(requestBody), Encoding.UTF8, "application/json");
+            _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", apiKey);
+
+            var response = await _httpClient.PostAsync(apiUrl, content);
+
+            if(!response.IsSuccessStatusCode)
+            {
+                return StatusCode((int)response.StatusCode, "Failed to fetch response from GPT-4.");
+            }
+
+            var responseContent = await response.Content.ReadAsStringAsync();
+
+            // Parse and extract assistant's message
+            var responseJson = JObject.Parse(responseContent);
+            string answer = responseJson["choices"]?[0]?["message"]?["content"]?.ToString();
+
+            // Return the assistant's answer directly as plain text
+            return Content(answer);
         }
 
     }

@@ -16,7 +16,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
 
     <style>
-           /* Add styles for the loader */
+        /* Add styles for the loader */
         .loader-overlay {
             position: fixed;
             top: 0;
@@ -45,10 +45,12 @@
             0% {
                 transform: rotate(0deg);
             }
+
             100% {
                 transform: rotate(360deg);
             }
         }
+
         .sidebar {
             height: 100vh;
             overflow-y: auto;
@@ -213,7 +215,7 @@
             <div class="text-white rounded-3 p-3 mb-4 shadow-sm" style="background-color: #008000;">
                 <h6 class="fw-bold mb-1">💬 ChatBot</h6>
                 <p class="mb-2 small">I'm here to help!</p>
-                <button class="btn btn-outline-light btn-sm rounded-pill px-3">Start Chat</button>
+                <button class="btn btn-outline-light btn-sm rounded-pill px-3" onclick="openStemChat()">Start Chat</button>
             </div>
 
 
@@ -368,6 +370,27 @@
             </div>
         </div>
     </div>
+    @*Ai cHATBOT Raimo*@
+    <div class="modal fade" id="stemChatModal" tabindex="-1" aria-labelledby="stemChatModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content bg-light">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="stemChatModalLabel">💡 STEM Chat Assistant</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <label for="stemQueryInput" class="form-label">Ask a STEM question:</label>
+                    <input type="text" class="form-control" id="stemQueryInput" placeholder="e.g. What is quantum computing?">
+                    <div id="stemChatResult" class="alert alert-info mt-3" style="display:none;"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-success" onclick="searchStem()">Search</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
 </body>
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
@@ -474,7 +497,7 @@
         }
     });
 
-//search functionality
+    //search functionality
     $(function () {
         $('#searchBox').on('change', function () {
             let query = $(this).val();
@@ -497,7 +520,37 @@
     $(document).ajaxStop(function () {
         $('.loader-overlay').fadeOut();
     });
+
+    function openStemChat() {
+        const modal = new bootstrap.Modal(document.getElementById('stemChatModal'));
+        modal.show();
+    }
+
+
+    //Ai Chat Bot
+
+        function searchStem() {
+        const query = document.getElementById("stemQueryInput").value;
+
+        if (!query) {
+            alert("Please enter a question.");
+        return;
+        }
+
+        fetch(`/Home/SearchStem?query=${encodeURIComponent(query)}`)
+            .then(response => response.text())
+            .then(data => {
+                const resultDiv = document.getElementById("stemChatResult");
+        resultDiv.innerHTML = data;
+        resultDiv.style.display = 'block';
+            })
+            .catch(error => {
+            console.error("Error:", error);
+        alert("Something went wrong.");
+            });
+    }
 </script>
+
 </html>
 
 
