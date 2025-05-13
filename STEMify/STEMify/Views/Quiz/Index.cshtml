@@ -25,6 +25,10 @@
                     <a class="btn btn-info" asp-action="EditQuiz" asp-route-id="@quiz.Id"
                        data-id="@quiz.Id" data-name="@quiz.Title">
                         Edit
+                    </a> 
+                    <a class="btn btn-info" asp-action="LinkQuizToCourse" asp-route-id="@quiz.Id"
+                       data-id="@quiz.Id" data-name="@quiz.Title">
+                        Link
                     </a>                    
                     <a class="btn btn-info" asp-action="StartQuiz" asp-controller="QuizSession" asp-route-id="@quiz.Id"
                        data-id="@quiz.Id" data-name="@quiz.Title">

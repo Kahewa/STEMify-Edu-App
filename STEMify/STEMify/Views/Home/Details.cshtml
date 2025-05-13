@@ -1,0 +1,33 @@
+﻿@model STEMify.Models.Course
+
+<div>
+    <h4>@Model.CourseName</h4>
+    <hr />
+    <h4>@Model.Description</h4>
+</div>
+<div class="row">
+</div>
+<div>
+    @if(ViewBag.Quizzes != null && ((List<STEMify.Models.Quiz>)ViewBag.Quizzes).Any())
+    {
+        <ul>
+            @foreach(var quiz in (List<STEMify.Models.Quiz>)ViewBag.Quizzes)
+            {
+                <li>
+                    @quiz.Title
+                    <a class="btn btn-sm btn-success ml-2"
+                       asp-action="StartQuiz" asp-controller="QuizSession" asp-route-id="@quiz.Id"
+                       data-id="@quiz.Id" data-name="@quiz.Title">
+                        Start Quiz
+                    </a>
+                </li>
+            }
+        </ul>
+    }
+    else
+    {
+        <p>No quizzes linked to this course.</p>
+    }
+    <a asp-action="Edit" asp-route-id="@Model?.CourseID">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

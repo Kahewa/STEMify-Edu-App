@@ -27,7 +27,7 @@ namespace STEMify.Data.Interfaces
         ITrueFalseQuestionRepository TrueFalseQuestions { get; }
         IUserCoursesRepository UserCourses { get; }
         IUserTaskRepository UserTasks { get; }
-        IRepository<QuizAnswer> QuizAnswers { get; }
+        IQuizAnswerRepository QuizAnswers { get; }
         IRepository<QuizAttempt> QuizAttempts { get; }
 
     }

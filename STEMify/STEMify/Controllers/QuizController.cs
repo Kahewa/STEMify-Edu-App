@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using STEMify.Controllers;
 using STEMify.Data.Interfaces;
 using STEMify.Models;
+using STEMify.Models.ViewModels;
 using System.Threading.Tasks;
 
 namespace STEMify.Controllers
@@ -468,6 +469,32 @@ namespace STEMify.Controllers
 
             return RedirectToAction("Questions"); // Or wherever you want to redirect
         }
+        [HttpGet]
+        public ActionResult LinkQuizToCourse(int id)
+        {
+            var quiz = UnitOfWork.Quizzes.Get(id);
+            if(quiz == null) return NotFound();
+
+            var courses = UnitOfWork.Courses.GetAll().ToList();
+
+            ViewBag.SelectList = new SelectList(courses, "CourseID", "CourseName");
+
+            return View("LinkQuizToCourse", quiz); // pass the quiz object
+        }
+
+        [HttpPost]
+        public IActionResult LinkQuizToCourse(int id, int CourseID)
+        {
+            var quiz = UnitOfWork.Quizzes.Get(id);
+            if(quiz == null)
+                return NotFound();
+
+            quiz.CourseID = CourseID;
+            UnitOfWork.Complete();
+
+            return RedirectToAction("Index"); // Or wherever your list view is
+        }
+
 
     }
 }
