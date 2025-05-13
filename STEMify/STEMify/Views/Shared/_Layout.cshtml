@@ -16,9 +16,45 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
 
     <style>
-        .sidebar {
-            min-height: 100vh;
+           /* Add styles for the loader */
+        .loader-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+            z-index: 9999;
+            display: none; /* Hidden by default */
         }
+
+        .loader {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border: 8px solid #f3f3f3; /* Light gray */
+            border-top: 8px solid #3498db; /* Blue */
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+        }
+
+        @@keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+        .sidebar {
+            height: 100vh;
+            overflow-y: auto;
+            position: fixed;
+        }
+
 
         aside {
             min-height: 100vh;
@@ -94,7 +130,9 @@
 </head>
 
 <body class="bg-light">
-
+    <div class="loader-overlay">
+        <div class="loader"></div>
+    </div>
 
     <!-- Mobile Toggle -->
     <div class="d-md-none position-fixed top-0 start-0 w-100 bg-white shadow-sm p-2 z-1035 d-flex justify-content-between" style="height: 60px;">
@@ -116,7 +154,8 @@
 
 
 
-        <nav id="sidebar" class="bg-white sidebar text-dark p-3 d-none d-md-block position-fixed" style="width: 250px; height: 100vh; z-index: 1050; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
+        <nav id="sidebar" class="bg-white sidebar text-dark p-3 d-none d-md-block position-fixed"
+             style="width: 250px; height: 100vh; z-index: 1050; box-shadow: 0 0 10px rgba(0,0,0,0.1); overflow-y: auto;">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <div class="logo text-success fw-bold">
                     <i class="fas fa-atom me-2"></i> STEMify
@@ -448,8 +487,17 @@
             });
         });
     });
-</script>
 
+    // Show loader when AJAX starts
+    $(document).ajaxStart(function () {
+        $('.loader-overlay').fadeIn();
+    });
+
+    // Hide loader when AJAX completes
+    $(document).ajaxStop(function () {
+        $('.loader-overlay').fadeOut();
+    });
+</script>
 </html>
 
 
